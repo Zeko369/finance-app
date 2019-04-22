@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_21_052801) do
+ActiveRecord::Schema.define(version: 2019_04_22_164641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "expectations", force: :cascade do |t|
+    t.bigint "list_id"
+    t.bigint "month_id"
+    t.decimal "amount"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["list_id"], name: "index_expectations_on_list_id"
+    t.index ["month_id"], name: "index_expectations_on_month_id"
+  end
 
   create_table "expenses", force: :cascade do |t|
     t.string "name"
@@ -21,14 +31,28 @@ ActiveRecord::Schema.define(version: 2019_04_21_052801) do
     t.bigint "list_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "month_id"
     t.index ["list_id"], name: "index_expenses_on_list_id"
+    t.index ["month_id"], name: "index_expenses_on_month_id"
   end
 
   create_table "lists", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "dirrection", default: false
+    t.boolean "reoccurring", default: false
   end
 
+  create_table "months", force: :cascade do |t|
+    t.integer "month", null: false
+    t.integer "year", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "expectations", "lists"
+  add_foreign_key "expectations", "months"
   add_foreign_key "expenses", "lists"
+  add_foreign_key "expenses", "months"
 end

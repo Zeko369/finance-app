@@ -2,7 +2,19 @@ class ListsController < ApplicationController
   before_action :set_list, only: [:show, :edit, :update, :destroy]
 
   def index
-    @lists = List.all
+    @month = Month.where(month: params[:month], year: params[:year])
+    @month = Month.current if @month.blank?
+
+    @sums = List.includes(expenses: [:month])
+                .group('list_id')
+                .where('expenses.month_id = ?', @month.id)
+                .sum('expenses.amount')
+    @out = List.where(dirrection: false)
+               .left_outer_joins(:expectations)
+               .where('expectations.month_id = ? OR expectations.month_id IS NULL', @month.id)
+    @in = List.where(dirrection: true)
+              .left_outer_joins(:expectations)
+              .where('expectations.month_id = ? OR expectations.month_id IS NULL', @month.id)
   end
 
   def show
@@ -56,6 +68,6 @@ class ListsController < ApplicationController
     end
 
     def list_params
-      params.require(:list).permit(:name)
+      params.require(:list).permit(:name, :dirrection)
     end
 end
