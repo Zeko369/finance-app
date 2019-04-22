@@ -1,0 +1,25 @@
+.wrapper
+  .container.mt-2
+    .row.justify-content-center
+      .col-md-10
+        p#notice = notice
+
+        h1
+          strong = "Name: #{@list.name}"
+        
+        = link_to 'Add', new_list_expense_path(@list), class: 'btn btn-success float-right'
+        h2 = @sum
+
+        table.table
+          - @list.expenses.each do |expense|
+            tr
+              td = expense.id
+              td = link_to expense.name, list_expense_path(@list, expense)
+              td = expense.amount
+              td
+                = link_to 'Edit', edit_list_expense_path(@list, expense), class: 'btn btn-info m-2'
+                = link_to 'Destroy', list_expense_path(@list, expense), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger m-2'
+
+        br
+        = link_to 'Edit', edit_list_path(@list)
+        = link_to 'Back', lists_path

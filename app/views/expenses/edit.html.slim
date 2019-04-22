@@ -1,0 +1,7 @@
+.wrapper
+  .container.mt-2
+    .row.justify-content-center
+      .col-md-10
+        h3 = 'Edit expense'
+        = bootstrap_form_for(@expense, url: list_expense_path(@list, @expense)) do |f|
+          = render 'form', f: f

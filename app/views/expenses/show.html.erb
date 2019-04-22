@@ -12,8 +12,8 @@
 
 <p>
   <strong>List:</strong>
-  <%= @expense.list_id %>
+  <%= @list.name %>
 </p>
 
-<%= link_to 'Edit', edit_expense_path(@expense) %> |
-<%= link_to 'Back', expenses_path %>
+<%= link_to 'Edit', edit_list_expense_path(@list, @expense) %> |
+<%= link_to 'Back', list_path(@list) %>

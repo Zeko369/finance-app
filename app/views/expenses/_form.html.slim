@@ -1,0 +1,5 @@
+= f.alert_message t('form.alert_message')
+= f.text_field :name, required: true
+= f.number_field :amount, required: true, step: :any
+
+= f.submit 'Submit', class: 'btn btn-primary float-right'
