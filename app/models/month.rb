@@ -11,6 +11,7 @@ class Month < ApplicationRecord
   end
 
   def add_expectations
+    return unless Month.count > 1
     new_expectations = Month.order(id: :desc).offset(1).first.expectations.map do |exp|
       Expectation.create!(list_id: exp.list_id, amount: exp.amount, month: self)
       # if exp.list.reoccurring
