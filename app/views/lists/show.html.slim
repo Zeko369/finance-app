@@ -6,12 +6,23 @@
 
         h1
           strong = "Name: #{@list.name}"
-        
+
         = link_to 'Add', new_list_expense_path(@list), class: 'btn btn-success float-right'
         h2 = @sum
 
+        = link_to 'Today', list_path(@list, month_id: Month.current.id)
+        = "   "
+        = link_to 'All', list_path(@list, month_id: -1)
+        br
+        - if @all
+          = 'No date, all'
+        - else
+          = link_to 'Prev', list_path(@list, month: @month.month == 0 ? 11 : @month.month - 1, year: @month.month == 0 ? @month.year - 1 : @month.year)
+          = "  #{@month.name}  "
+          = link_to 'Next', list_path(@list, month: @month.month == 11 ? 0 : @month.month + 1, year: @month.month == 11 ? @month.year + 1 : @month.year)
+
         table.table
-          - @list.expenses.each do |expense|
+          - @expenses.each do |expense|
             tr
               td = expense.id
               td = link_to expense.name, list_expense_path(@list, expense)

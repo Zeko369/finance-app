@@ -10,7 +10,7 @@ class ExpensesController < ApplicationController
   end
 
   def new
-    @expense = Expense.new
+    @expense = Expense.new(month_id: params[:month_id])
   end
 
   def edit
@@ -60,7 +60,7 @@ class ExpensesController < ApplicationController
     end
     
     def expense_params
-      tmp_params = params.require(:expense).permit(:name, :amount)
+      tmp_params = params.require(:expense).permit(:name, :amount, :month_id)
       tmp_params[:list_id] = @list.id
       tmp_params
     end

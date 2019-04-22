@@ -1,5 +1,6 @@
 = f.alert_message t('form.alert_message')
 = f.text_field :name, required: true
 = f.number_field :amount, required: true, step: :any
+= f.collection_select(:month_id, Month.all, :id, :name)
 
 = f.submit 'Submit', class: 'btn btn-primary float-right'

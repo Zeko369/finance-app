@@ -8,11 +8,11 @@ table.table
   tbody
     - lists.each do |list|
       tr
-        td = link_to "#{list.name}#{list.reoccurring ? '*' : ''}", list
+        td = link_to "#{list.name}#{list.reoccurring ? '*' : ''}", list_path(list, month_id: @month_id)
         td = @sums[list.id] || 0
         td = list.expectations.find_by(month_id: @month.id)&.amount || 0
         td
           .float-right.rowww
-            = link_to '', new_list_expense_path(list), class: 'btn btn-success btn-sm m-1'
+            = link_to '', new_list_expense_path(list, month_id: @month.id), class: 'btn btn-success btn-sm m-1'
             = link_to '', edit_list_path(list), class: 'btn btn-info btn-sm m-1'
             = link_to '', list, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm m-1 '','

@@ -6,6 +6,10 @@ class Month < ApplicationRecord
 
   validates :month, uniqueness: { scope: :year }
 
+  def name
+    "#{month+1} - #{year}"
+  end
+
   def add_expectations
     new_expectations = Month.order(id: :desc).offset(1).first.expectations.map do |exp|
       Expectation.create!(list_id: exp.list_id, amount: exp.amount, month: self)

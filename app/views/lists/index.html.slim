@@ -10,6 +10,17 @@
         br
         br
 
+        = link_to 'Today', lists_path(month_id: Month.current.id)
+        = "   "
+        = link_to 'All', lists_path(month_id: -1)
+        br
+        - if @all
+          = 'No date, all'
+        - else
+          = link_to 'Prev', lists_path(month: @month.month == 0 ? 11 : @month.month - 1, year: @month.month == 0 ? @month.year - 1 : @month.year)
+          = "  #{@month.name}  "
+          = link_to 'Next', lists_path(month: @month.month == 11 ? 0 : @month.month + 1, year: @month.month == 11 ? @month.year + 1 : @month.year)
+
         .row
           .col-md-6
             .card.m-2

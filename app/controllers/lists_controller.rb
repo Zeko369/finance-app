@@ -1,24 +1,33 @@
 class ListsController < ApplicationController
   before_action :set_list, only: [:show, :edit, :update, :destroy]
+  before_action :set_month, only: [:index, :show]
 
   def index
-    @month = Month.where(month: params[:month], year: params[:year])
-    @month = Month.current if @month.blank?
-
     @sums = List.includes(expenses: [:month])
                 .group('list_id')
-                .where('expenses.month_id = ?', @month.id)
-                .sum('expenses.amount')
-    @out = List.where(dirrection: false)
+    @sums = @sums.where('expenses.month_id = ?', @month.id) unless @all == true
+    @sums = @sums.sum('expenses.amount')
+    @out = List.order(created_at: :asc)
+               .where(dirrection: false)
                .left_outer_joins(:expectations)
-               .where('expectations.month_id = ? OR expectations.month_id IS NULL', @month.id)
-    @in = List.where(dirrection: true)
+
+    @in = List.order(created_at: :asc)
+              .where(dirrection: true)
               .left_outer_joins(:expectations)
-              .where('expectations.month_id = ? OR expectations.month_id IS NULL', @month.id)
+
+    unless @all == true
+      @out = @out.where('expectations.month_id = ? OR expectations.month_id IS NULL', @month.id)
+      @in = @in.where('expectations.month_id = ? OR expectations.month_id IS NULL', @month.id)
+    else
+      @out = @out.distinct
+      @in = @in.distinct
+    end
   end
 
   def show
-    @sum = @list.expenses.sum(:amount)
+    @expenses = @list.expenses
+    @expenses = @expenses.where('expenses.month_id = ?', @month.id) unless @all
+    @sum = @expenses.sum(:amount)
   end
 
   def new
@@ -65,6 +74,22 @@ class ListsController < ApplicationController
   private
     def set_list
       @list = List.find(params[:id])
+    end
+
+    def set_month
+      @all = false
+      @month = if params[:month_id].present?
+                 if params[:month_id].to_i == -1
+                   @all = true
+                   Month.current
+                 else
+                   Month.find(params[:month_id])
+                 end
+               elsif params[:month].blank? || params[:year].blank?
+                 Month.current
+               else
+                 Month.find_or_create_by(month: params[:month], year: params[:year])
+               end
     end
 
     def list_params
