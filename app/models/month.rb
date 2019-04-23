@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: months
+#
+#  id         :bigint(8)        not null, primary key
+#  month      :integer          not null
+#  year       :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Month < ApplicationRecord
   has_many :expectations, dependent: :destroy
   has_many :expenses, dependent: :nullify
